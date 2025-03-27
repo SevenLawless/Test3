@@ -18,8 +18,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // Get current URL
             const currentUrl = window.location.href;
             
-            // Try to open in external browser
-            window.open(currentUrl, '_blank');
+            // Try multiple approaches to open in external browser
+            try {
+                // Method 1: Using standard window.open with _system target (works on some mobile devices)
+                window.open(currentUrl, '_system');
+                
+                // Method 2: Using location.href as fallback
+                setTimeout(() => {
+                    // If we're still here after a short delay, try changing location directly
+                    const externalUrl = 'https://www.google.com/url?q=' + encodeURIComponent(currentUrl);
+                    window.location.href = externalUrl;
+                }, 100);
+            } catch (e) {
+                // If all else fails, provide a manual instruction
+                alert('لفتح في المتصفح الخارجي، يرجى نسخ الرابط: ' + currentUrl);
+            }
         });
     }
 
