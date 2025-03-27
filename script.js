@@ -13,25 +13,44 @@ document.addEventListener('DOMContentLoaded', () => {
         fbOpenInBrowserBtn.style.display = 'block';
         document.body.classList.add('fb-browser-active'); // Add class to body
         
+        // Add visual feedback for tap/click
+        fbOpenInBrowserBtn.addEventListener('touchstart', () => {
+            fbOpenInBrowserBtn.style.backgroundColor = '#0c55a4';
+            fbOpenInBrowserBtn.style.transform = 'scale(0.98)';
+        });
+        
+        fbOpenInBrowserBtn.addEventListener('touchend', () => {
+            fbOpenInBrowserBtn.style.backgroundColor = '#1877f2';
+            fbOpenInBrowserBtn.style.transform = 'scale(1)';
+        });
+        
         // Add click event to open in external browser
         fbOpenInBrowserBtn.addEventListener('click', () => {
             // Get current URL
             const currentUrl = window.location.href;
             
-            // Try multiple approaches to open in external browser
-            try {
-                // Method 1: Using standard window.open with _system target (works on some mobile devices)
-                window.open(currentUrl, '_system');
+            // Force opening in external browser - more reliable method
+            // Method 1: Use an intent URL that forces external browser (most reliable)
+            if (navigator.userAgent.indexOf('Android') > -1) {
+                // Android-specific approach
+                window.location.href = 'intent://' + window.location.host + window.location.pathname + 
+                    window.location.search + '#Intent;scheme=' + window.location.protocol.replace(':', '') + 
+                    ';package=com.android.chrome;end';
+            } else {
+                // iOS and others
+                // Method 2: Use special prefixed URL that Facebook doesn't intercept
+                const externalUrl = 'https://apps.facebook.com/exit_to_web/?destination=' + encodeURIComponent(currentUrl);
+                window.location.href = externalUrl;
                 
-                // Method 2: Using location.href as fallback
+                // Method 3: Fallback after a longer delay
                 setTimeout(() => {
-                    // If we're still here after a short delay, try changing location directly
-                    const externalUrl = 'https://www.google.com/url?q=' + encodeURIComponent(currentUrl);
-                    window.location.href = externalUrl;
-                }, 100);
-            } catch (e) {
-                // If all else fails, provide a manual instruction
-                alert('لفتح في المتصفح الخارجي، يرجى نسخ الرابط: ' + currentUrl);
+                    window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(currentUrl);
+                }, 500);
+                
+                // Method 4: Ultimate fallback with alert for manual copy
+                setTimeout(() => {
+                    alert('يرجى فتح متصفح خارجي ونسخ هذا الرابط: ' + currentUrl);
+                }, 1500);
             }
         });
     }

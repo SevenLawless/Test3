@@ -26,34 +26,45 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 12px;
+            padding: 15px;
             background-color: #1877f2; /* Facebook blue */
             color: white;
             text-align: center;
             font-weight: bold;
             z-index: 9999;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            font-size: 16px;
-            animation: pulse 2s infinite;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            font-size: 18px;
+            animation: fbBounce 3s infinite;
+            border-bottom: 3px solid #fff;
         }
         
-        @keyframes pulse {
-            0% { background-color: #1877f2; }
-            50% { background-color: #0c55a4; }
-            100% { background-color: #1877f2; }
+        @keyframes fbBounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
         }
         
         #fb-open-in-browser:after {
             content: " ↗️";
-            font-size: 18px;
+            font-size: 20px;
+        }
+        
+        #fb-open-in-browser:active {
+            background-color: #0c55a4;
+            transform: scale(0.98);
+        }
+        
+        /* Add extra space at top of body when button is present */
+        .fb-browser-active {
+            padding-top: 50px !important;
         }
     </style>
 </head>
 <body>
     <!-- Facebook in-app browser button -->
     <div id="fb-open-in-browser">
-        افتح في المتصفح الخارجي لتجربة أفضل
+        انقر هنا للفتح بالمتصفح الخارجي للحصول على أفضل تجربة
     </div>
 
     <header>
